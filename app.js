@@ -1,12 +1,16 @@
 var http = require('http');
 var fs = require('fs');
 var ent = require('ent');
+var url = require('url');
+var suitest = require('suitest');
 
 var server = http.createServer(function(req, res)
 {    
-    if(req.url.indexOf('.css') != -1)
+    var page = url.parse(req.url).pathname;
+    
+    if (req.url.indexOf('.css') != -1)
     {
-        fs.readFile(__dirname + '/public/css/style.css', function (err, data)
+        fs.readFile(__dirname + page, function (err, data)
         {
             if (err) console.log(err);
             res.writeHead(200, {'Content-Type': 'text/css'});
@@ -14,17 +18,44 @@ var server = http.createServer(function(req, res)
             res.end();
         });
     }
+    else if (req.url.indexOf('.js') != -1)
+    {
+        fs.readFile(__dirname + page, function (err, data)
+        {
+            if (err) console.log(err);
+            res.writeHead(200, {'Content-Type': 'application/javascript'});
+            res.write(data);
+            res.end();
+        });
+    }
     else
     {
-        fs.readFile('./index.html', 'utf-8', function(error, content) 
+        if (page == '/')
         {
-            res.writeHead(200, {"Content-Type": "text/html"});
-            res.end(content);
-        });
+            fs.readFile('./index.html', 'utf-8', function(error, content) 
+            {
+                res.writeHead(200, {"Content-Type": "text/html"});
+                res.end(content);
+            });
+        }
+        else if (page == '/test')
+        {
+            fs.readFile('./test.html', 'utf-8', function(error, content) 
+            {
+                res.writeHead(200, {"Content-Type": "text/html"});
+                res.end(content);
+            });
+        }
+        else
+        {
+            console.log(page);
+            res.redirect('/');
+        }
     }
     
 });
 
+                     
 var io = require('socket.io').listen(server);
 
 String.prototype.replaceAt = function(index, character)
