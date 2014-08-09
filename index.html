@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Sample App</title>
+        
+        <link rel="stylesheet" type="text/css" href="./style.css">
+    </head>
+ 
+    <body>
+        <h1>Sample App</h1>
+                
+        <div id="zoneserver">
+        </div>
+
+        <div id="zoneinput">
+            <input type="text" placeholder="Your text..." name="message" id="message"/>
+            <input type="button" value="submit" id="submit"/>
+        </div>
+        
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        
+        <script>
+            var socket = io.connect('http://localhost:8080');
+                        
+            var writeMessage = function(message)
+            {                    
+                $('#zoneserver').add("<p class='zonemessage'>" 
+                                   + message 
+                                   + "</p>").appendTo(document.body);
+            };
+            
+            socket.on('message', function(message){
+                writeMessage(message);
+            });
+            
+            $("#submit").click(function(e)
+            {
+                var message = {
+                    value: $("#message").val()
+                };
+                
+                socket.emit('message', message.value);
+                writeMessage(message);
+                $("#message").val('');
+            });
+            
+            $("#message").keypress(function(e){
+                if (e.keyCode == 13)
+                {
+                    socket.emit('message', $("#message").val());
+                    $("#message").val('');
+                }
+            });
+            
+        </script>
+    </body>
+</html>

@@ -1,0 +1,14 @@
+{
+    "name": "sampleApp",
+    "version": "0.1.0",
+    "dependencies": {
+        "socket.io": "~0.9.16",
+        "ent": "~2.0"
+    },
+    "author": "Adrien Manikon",
+    "description": "Sample App",
+    "repository": {
+        "type": "git",
+        "url": ""
+    }
+}
