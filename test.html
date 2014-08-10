@@ -41,6 +41,19 @@
                 writeMessage(message);
             });
             
+            socket.on("result", function(message)
+            {
+                    $('#zoneserver').prepend(
+                        "<div class='zonetest'"
+                        + "<h2>" + message.title + "</h2>"
+                        + "<ul><li>Description: " + message.desc + "</li>"
+                        + "<li>Expected: " + message.exp + "</li>"
+                        + "<li>Actual: " + message.actual + "</li>"
+                        + "<li>Status: <span class='" + message.status + "'>" + message.status + "</span></li>"
+                        + "<li>Time: " + message.time + "</li>"
+                        + "</ul></div>"
+                    );
+            });
         </script>
     </body>
 </html>

@@ -100,8 +100,19 @@ io.sockets.on('connection', function (socket)
         // test 1
         unit_1.test('test 1', function(unit)
         {
-            unit.describe('Test description 1!')
-            .exec(true, 1).done(); // true
+            var test =
+            {
+                title: 'test 1',
+                desc: 'Test description 1!',
+                exp: true,
+                actual: 1
+            }
+            
+            unit.describe('Test description 1!').exec(false, 1).done(function(e) {
+                    test.status = e.status;
+                    test.time = e.time;
+                    socket.emit("result", test);
+                });
         });
         
         var unit_2 = new Suitest('Module string');
@@ -109,34 +120,75 @@ io.sockets.on('connection', function (socket)
         unit_2.test('test 1', function(unit)
         {
             var text = "test";
-            var result = "tset";
+            var test =
+            {
+                title: 'test 1',
+                desc: "Test with 'test'",
+                exp: "tset",
+                actual: reverseString(text, 0)
+            }
             
-            unit.describe("Test with 'test'").exec(reverseString(text, 0), result).done();
+            unit.describe("Test with 'test'").exec(test.actual, test.exp).done(function(e) {
+                    test.status = e.status;
+                    test.time = e.time;
+                    socket.emit("result", test);
+            });
         });
         
         unit_2.test('test 2', function(unit)
         {
             var text = "";
-            var result = "";
-            
-            unit.describe("Test with ''").exec(reverseString(text, 0), result).done();
+            var test =
+            {
+                title: 'test 2',
+                desc: "Test with an empty word",
+                exp: "",
+                actual: reverseString(text, 0)
+            }
+                        
+            unit.describe("Test with ''").exec(test.actual, test.exp).done(function(e) {
+                    test.status = e.status;
+                    test.time = e.time;
+                    socket.emit("result", test);
+            });
         });
         
         unit_2.test('test 3', function(unit)
         {
             var text = "a";
-            var result = "a";
+            var test =
+            {
+                title: 'test 3',
+                desc: "Test with one letter",
+                exp: "a",
+                actual: reverseString(text, 0)
+            }
             
-            unit.describe("Test with one letter").exec(reverseString(text, 0), result).done();
+            unit.describe("Test with one letter").exec(test.actual, test.exp).done(function(e) {
+                    test.status = e.status;
+                    test.time = e.time;
+                    socket.emit("result", test);
+            });
         });
         
         unit_2.test('test 4', function(unit)
         {
             var text = "a&'(-à)_('é\"&çà_'àç-'é";
-            var result = "";
+            var test =
+            {
+                title: 'test 2',
+                desc: "Test with special characters",
+                exp: "é'-çà'_àç&\"\é'(_)à-('&a",
+                actual: reverseString(text, 0)
+            }
             
-            unit.describe("Test with with special characters").exec(reverseString(text, 0), reverseString(text, 0)).done();
+            unit.describe("Test with with special characters").exec(test.actual, test.exp).done(function(e) {
+                    test.status = e.status;
+                    test.time = e.time;
+                    socket.emit("result", test);
+            });
         });
+        
     });
 });
 
