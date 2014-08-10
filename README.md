@@ -40,6 +40,8 @@ And go to http://localhost:8080
 You wil see a page which an input and two buttons.
 The first button submits your input text and give you back the reversed word. The seconde one runs unit tests and give you theirs results.
 
+You can also see result tests in your console.
+
 ## Edit tests
 
 You can edit, create or remove tests in app.js. The tests have been written with [suitest] (https://github.com/monolithed/Suitest/)

@@ -9,6 +9,7 @@ var fs = require('fs');
 var ent = require('ent');
 var url = require('url');
 var suitest = require('suitest');
+var port = 8080;
 
 //Create a server
 var server = http.createServer(function(req, res)
@@ -183,4 +184,4 @@ io.sockets.on('connection', function (socket)
     });
 });
 
-server.listen(8080);
+server.listen(port);
