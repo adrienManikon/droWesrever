@@ -30,22 +30,11 @@ var server = http.createServer(function(req, res)
     }
     else
     {
-        if (page == '/')
+        fs.readFile('./index.html', 'utf-8', function(error, content) 
         {
-            fs.readFile('./index.html', 'utf-8', function(error, content) 
-            {
-                res.writeHead(200, {"Content-Type": "text/html"});
-                res.end(content);
-            });
-        }
-        else if (page == '/test')
-        {
-            fs.readFile('./test.html', 'utf-8', function(error, content) 
-            {
-                res.writeHead(200, {"Content-Type": "text/html"});
-                res.end(content);
-            });
-        }
+            res.writeHead(200, {"Content-Type": "text/html"});
+            res.end(content);
+        });
     }
     
 });
