@@ -1,14 +1,22 @@
+/*******************
+
+    SERVER SIDE
+
+*******************/
+
 var http = require('http');
 var fs = require('fs');
 var ent = require('ent');
 var url = require('url');
 var suitest = require('suitest');
 
+//Create a server
 var server = http.createServer(function(req, res)
 {    
     var page = url.parse(req.url).pathname;
     
-    if (req.url.indexOf('.css') != -1)
+
+    if (req.url.indexOf('.css') != -1) // load css file
     {
         fs.readFile(__dirname + page, function (err, data)
         {
@@ -18,7 +26,7 @@ var server = http.createServer(function(req, res)
             res.end();
         });
     }
-    else if (req.url.indexOf('.js') != -1)
+    else if (req.url.indexOf('.js') != -1) // load js file
     {
         fs.readFile(__dirname + page, function (err, data)
         {
@@ -28,7 +36,7 @@ var server = http.createServer(function(req, res)
             res.end();
         });
     }
-    else
+    else //for any other request, we are redirected to index.html
     {
         fs.readFile('./index.html', 'utf-8', function(error, content) 
         {
@@ -39,9 +47,14 @@ var server = http.createServer(function(req, res)
     
 });
 
-                     
+// Create a socket listening the server                      
 var io = require('socket.io').listen(server);
 
+/*****************
+    Public methods for the application
+*****************/
+
+// Replace a character at index
 String.prototype.replaceAt = function(index, character)
 {
     var newString =  this.substr(0, index) 
@@ -51,6 +64,7 @@ String.prototype.replaceAt = function(index, character)
     return newString;
 }
 
+// Reverse word
 function reverseString (message, index)
 {    
     if( (message === 'undefined') || (message.length <= 1) || index > (message.length - 1)/2 )
@@ -71,12 +85,14 @@ function reverseString (message, index)
 
 io.sockets.on('connection', function (socket)
 {
+    // When socket receipts a word
     socket.on('message', function(message)
     {
         message = reverseString(message, 0);
         socket.emit('message', message);
     });
     
+    // When we click on run test
     socket.on("test_script_js", function(message)
     {
         message = reverseString(message, 0);
@@ -85,28 +101,11 @@ io.sockets.on('connection', function (socket)
     
     socket.on('test', function(message)
     {
-        var unit_1 = new suitest('Module 1');
-        // test 1
-        unit_1.test('test 1', function(unit)
-        {
-            var test =
-            {
-                title: 'test 1',
-                desc: 'Test description 1!',
-                exp: true,
-                actual: 1
-            }
-            
-            unit.describe('Test description 1!').exec(false, 1).done(function(e) {
-                    test.status = e.status;
-                    test.time = e.time;
-                    socket.emit("result", test);
-                });
-        });
+        // Create unit test object
+        var unit_test = new Suitest('Module string');
         
-        var unit_2 = new Suitest('Module string');
-        
-        unit_2.test('test 1', function(unit)
+        // test : "test"
+        unit_test.test('test 1', function(unit)
         {
             var text = "test";
             var test =
@@ -124,7 +123,8 @@ io.sockets.on('connection', function (socket)
             });
         });
         
-        unit_2.test('test 2', function(unit)
+        // test : ""
+        unit_test.test('test 2', function(unit)
         {
             var text = "";
             var test =
@@ -142,7 +142,8 @@ io.sockets.on('connection', function (socket)
             });
         });
         
-        unit_2.test('test 3', function(unit)
+        // test : "a"
+        unit_test.test('test 3', function(unit)
         {
             var text = "a";
             var test =
@@ -160,7 +161,8 @@ io.sockets.on('connection', function (socket)
             });
         });
         
-        unit_2.test('test 4', function(unit)
+        // test with special character
+        unit_test.test('test 4', function(unit)
         {
             var text = "a&'(-à)_('é\"&çà_'àç-'é";
             var test =
