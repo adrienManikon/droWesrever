@@ -7,11 +7,11 @@ A sample application which reverse words
 
 2 ways to import sources.
 
-## Git
+### Git
 
 If you choose this one, you only need to clone this repository.
 
-## Download droWesrever.zip
+### Download droWesrever.zip
 
 If you download this zip, you will need to install modules.
 *npm*
